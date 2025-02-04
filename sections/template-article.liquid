@@ -1,0 +1,112 @@
+{% comment %}
+  http://127.0.0.1:9292/blogs/news/forest-mountains
+  http://127.0.0.1:9292/blogs/news/
+
+
+  <img src="{{ article.image.src }}" alt="{{ article.image.src }}" width="200px" height="200px">
+  src="{{ article.image | image_url: 'large' }}"
+  width="100%"  height="100%"
+{% endcomment %}
+<article>
+  {% for block in section.blocks %}
+    {% case block.type %}
+      {% when 'title' %}
+        {% if section.settings.title_checkbox %}
+          <h1>{{ article.title }}</h1>
+        {% endif %}
+      {% when 'article_content' %}
+        {% if section.settings.content_checkbox %}
+          <p>
+            {{ article.content }}
+          </p>
+        {% endif %}
+      {% when 'article_author' %}
+        <small>{{ article.author }}</small>
+
+      {% when 'featured_image' %}
+        {% if section.settings.image_checkbox %}
+          <img
+            src="{{ article.image | image_url: 'large' }}"
+            alt="{{ article.image.alt }}"
+            loading="lazy"
+            width="60%"
+            height="60%"
+          >
+        {% endif %}
+      {% when 'article_published_date' %}
+        {% if section.settings.datetime_checkbox %}
+          <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+            {{- article.published_at | date: '%Y-%m-%d' -}}
+          </time>
+        {% endif %}
+      {% else %}
+        {{ block.type }}
+    {% endcase %}
+  {% endfor %}
+</article>
+
+{% comment %}
+  The the block can be added a number of times equal to the limit set in the schema.
+{% endcomment %}
+
+{% schema %}
+{
+  "name": "Article Template",
+  "tag": "section",
+  "class": "flex justify-center items-center min-h-screen flex-col",
+  "settings": [
+    {
+      "type": "checkbox",
+      "default": true,
+      "id": "datetime_checkbox",
+      "label": "Show Date and Time"
+    },
+    {
+      "type": "checkbox",
+      "default": true,
+      "id": "image_checkbox",
+      "label": "Show Featured Image"
+    },
+    {
+      "type": "checkbox",
+      "default": true,
+      "id": "content_checkbox",
+      "label": "Show Blog Content"
+    },
+    {
+      "type": "checkbox",
+      "default": true,
+      "id": "title_checkbox",
+      "label": "Show Blog Title"
+    }
+  ],
+
+  "blocks": [
+    {
+      "type": "title",
+      "name": "Title",
+      "limit": 1
+    },
+    {
+      "type": "featured_image",
+      "name": "Thumbnail",
+      "limit": 1
+    },
+    {
+      "type": "article_published_date",
+      "name": "Published Date",
+      "limit": 1
+    },
+    {
+      "type": "article_author",
+      "name": "Author",
+      "limit": 1
+    },
+    {
+      "type": "article_content",
+      "name": "Content",
+      "limit": 1
+    }
+  ]
+}
+{% endschema %}
