@@ -26,7 +26,7 @@
       {% when 'featured_image' %}
         {% if section.settings.image_checkbox %}
           <img
-            src="{{ article.image | image_url: 'large' }}"
+            src="{{ article.image | image_url }}"
             alt="{{ article.image.alt }}"
             loading="lazy"
             width="60%"
