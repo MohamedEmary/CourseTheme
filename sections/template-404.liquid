@@ -1,0 +1,57 @@
+{% comment %}
+  general.404.title this will access the general->404->title attribute inside locale files
+{% endcomment %}
+<h1 class="font-bold text-6xl">{{ section.settings.title }}</h1>
+<p class="font-medium text-2xl">{{ section.settings.subtext_html }}</p>
+{% if section.settings.btn_link == blank %}
+  {% assign btn_url = shop.secure_url %}
+{% else %}
+  {% assign btn_url = section.settings.btn_link %}
+{% endif %}
+<a
+  href="{{ btn_url }}"
+  class="bg-green-500 rounded-md px-4 py-2 mt-5 text-white font-bold hover:bg-green-700 duration-300"
+>
+  {{ section.settings.btn_label }}
+</a>
+
+{% comment %}
+  {{ shop.secure_url }}  https://ecomexperts-course1.myshopify.com
+
+  {{ shop.url }}  https://ecomexperts-course1.myshopify.com
+
+  {{ routes.root_url }}  /
+{% endcomment %}
+
+{% schema %}
+{
+  "name": "Template 404",
+  "tag": "section",
+  "class": "flex justify-center items-center min-h-screen flex-col",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "404",
+      "label": "404 Heading Title"
+    },
+    {
+      "type": "text",
+      "id": "subtext_html",
+      "default": "Sorry, the page you are looking for does not exist.",
+      "label": "404 Subtext Title"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "default": "Return Home",
+      "label": "Button Label"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    }
+  ]
+}
+{% endschema %}
