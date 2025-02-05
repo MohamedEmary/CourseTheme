@@ -1,6 +1,8 @@
 {% comment %}
   http://127.0.0.1:9292/blogs/news/forest-mountains
   http://127.0.0.1:9292/blogs/news/
+  https://search.google.com/test/rich-results/result/r%2Farticles?id=C7_SIlWMXNcnBNYadp2yEg
+  https://gi9hoyalc3hzsg3n-92447899962.shopifypreview.com/blogs/news/forest-mountains
 
 
   <img src="{{ article.image.src }}" alt="{{ article.image.src }}" width="200px" height="200px">
@@ -183,6 +185,15 @@
     }
   }
 </script>
+
+{% comment %}
+  defer error
+  {{ 'article.js' | asset_url | script_tag }}
+
+  JS autocomplete wasn't working to i wanted to write js in a separate js file and import it
+  into the section. I found the snippet below in dawn theme and used it.
+{% endcomment %}
+<script src="{{ 'article.js' | asset_url }}" defer="defer"></script>
 
 {% schema %}
 {
