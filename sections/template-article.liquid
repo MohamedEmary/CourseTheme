@@ -139,7 +139,8 @@
 
             {% if paginate.pages > 1 %}
               <div class="mt-8">
-                {{ paginate | default_pagination: class: 'flex justify-center space-x-2' }}
+                {% comment %} {{ paginate | default_pagination: class: 'flex justify-center space-x-2' }} {% endcomment %}
+                {% render 'pagination', pagination: paginate %}
               </div>
             {% endif %}
           {% endpaginate %}

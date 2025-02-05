@@ -1,0 +1,34 @@
+{% if pagination.pages > 1 %}
+  {% comment %}
+    Role="navigation" (ARIA Role) For accessbility
+  {% endcomment %}
+  <nav role="navigation" class="flex justify-center items-center my-8 gap-4">
+    {% if pagination.previous %}
+      <a
+        href="{{ pagination.previous.url }}"
+        class="border-2 p-2 text-white bg-green-500 rounded-md hover:bg-green-700"
+      >
+        {{- pagination.previous.title -}}
+      </a>
+    {% endif %}
+
+    {% comment %}
+      TODO: Handle a large number of pages
+    {% endcomment %}
+    {% for part in pagination.parts %}
+      {% comment %}
+        The condition below so we don't show the current page as a link
+      {% endcomment %}
+      {% if part.is_link %}
+        <a href="{{ part.url }}">{{ part.title }}</a>
+      {% else %}
+        <span class="font-bold">{{ part.title }}</span>
+      {% endif %}
+    {% endfor %}
+    {% if pagination.next %}
+      <a class="border-2 p-2 text-white bg-green-500 rounded-md hover:bg-green-700" href="{{ pagination.next.url }}">
+        {{- pagination.next.title -}}
+      </a>
+    {% endif %}
+  </nav>
+{% endif %}
