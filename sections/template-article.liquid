@@ -7,42 +7,134 @@
   src="{{ article.image | image_url: 'large' }}"
   width="100%"  height="100%"
 {% endcomment %}
-<article>
+
+<article class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-4xl">
   {% for block in section.blocks %}
     {% case block.type %}
       {% when 'title' %}
         {% if section.settings.title_checkbox %}
-          <h1>{{ article.title }}</h1>
+          <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">{{ article.title }}</h1>
         {% endif %}
+
       {% when 'article_content' %}
         {% if section.settings.content_checkbox %}
-          <p>
+          <div class="prose prose-lg max-w-none mt-6">
             {{ article.content }}
-          </p>
+          </div>
         {% endif %}
+
       {% when 'article_author' %}
-        <small>{{ article.author }}</small>
+        <div class="flex items-center text-gray-600 text-sm mt-4">
+          {% render 'icon-avatar' %}
+          <small>{{ article.author }}</small>
+        </div>
 
       {% when 'featured_image' %}
         {% if section.settings.image_checkbox %}
-          <img
-            src="{{ article.image | image_url }}"
-            alt="{{ article.image.alt }}"
-            loading="lazy"
-            width="60%"
-            height="60%"
-          >
+          {% if article.image != blank %}
+            <div class="mt-6 mb-8">
+              <img
+                src="{{ article.image | image_url }}"
+                alt="{{ article.image.alt }}"
+                width="{{ article.image.width }}"
+                height="{{ article.image.height }}"
+                loading="lazy"
+                class="w-full h-auto rounded-lg shadow-lg object-cover"
+              >
+            </div>
+          {% else %}
+            {% assign placeholder_image = 'lifestyle-1' %}
+            {{ placeholder_image | placeholder_svg_tag: 'w-full h-64 my-6 rounded-lg bg-gray-100' }}
+          {% endif %}
         {% endif %}
+
       {% when 'article_published_date' %}
         {% if section.settings.datetime_checkbox %}
-          <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
-            {{- article.published_at | date: '%Y-%m-%d' -}}
+          <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}" class="text-sm text-gray-500">
+            {{- article.published_at | date: '%B %d, %Y' -}}
           </time>
         {% endif %}
-      {% else %}
-        {{ block.type }}
     {% endcase %}
   {% endfor %}
+
+  {% if article.comments_enabled? %}
+    <div class="border-t border-gray-200 mt-12 pt-8">
+      {% form 'new_comment', article %}
+        <h2 class="text-2xl font-bold mb-6 text-gray-900">Leave a comment</h2>
+
+        {% if form.errors %}
+          <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded mb-3">
+            {% for error in form.errors %}
+              <p>{{ form.errors.messages[error] }}</p>
+            {% endfor %}
+            <p>Oh no, something went wrong. Please try again.</p>
+          </div>
+        {% elsif form.posted_successfully? %}
+          <div class="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded mb-3">
+            <p>Your comment has been posted successfully!</p>
+          </div>
+        {% endif %}
+
+        <div class="space-y-4">
+          <div class="flex flex-col sm:flex-row gap-4">
+            <input
+              name="comment[author]"
+              type="text"
+              placeholder="Your name"
+              required
+              class="w-full sm:w-1/2 px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+            >
+            <input
+              name="comment[email]"
+              type="email"
+              placeholder="Your email"
+              required
+              class="w-full sm:w-1/2 px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+            >
+          </div>
+          <textarea
+            name="comment[body]"
+            placeholder="Comment content"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500 h-32"
+          ></textarea>
+          <button
+            type="submit"
+            class="w-full bg-green-600 text-white font-medium py-3 px-4 rounded-md hover:bg-green-700 transition duration-200"
+          >
+            Post Comment
+          </button>
+        </div>
+      {% endform %}
+
+      {% if article.comments_count > 0 %}
+        <div class="mt-12">
+          {% paginate article.comments by 5 %}
+            <div class="space-y-6">
+              {% for comment in article.comments %}
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                  <div class="flex items-center space-x-2 mb-4">
+                    <span class="font-medium text-gray-900">{{ comment.author }}</span>
+                    <span class="text-gray-500 text-sm">{{ comment.created_at | date: format: 'default' }}</span>
+                  </div>
+                  <p class="text-gray-700 mb-2">{{ comment.content }}</p>
+                  <p class="text-gray-500 text-sm">{{ comment.email }}</p>
+                </div>
+              {% endfor %}
+            </div>
+
+            {% if paginate.pages > 1 %}
+              <div class="mt-8">
+                {{ paginate | default_pagination: class: 'flex justify-center space-x-2' }}
+              </div>
+            {% endif %}
+          {% endpaginate %}
+        </div>
+      {% else %}
+        <p class="text-center text-gray-500 mt-8">No comments yet</p>
+      {% endif %}
+    </div>
+  {% endif %}
 </article>
 
 {% comment %}
