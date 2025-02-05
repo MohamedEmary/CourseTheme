@@ -1,0 +1,96 @@
+{% paginate blog.articles by section.settings.number_of_articles %}
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-center text-slate-900 mb-12">{{ blog.title }}</h1>
+
+    <ul class="grid grid-cols-1 xl:grid-cols-3 gap-y-10 gap-x-6 items-stretch p-8">
+      {% for article in blog.articles %}
+        <li class="relative flex flex-col sm:flex-row xl:flex-col items-start shadow-lg rounded-lg">
+          <a
+            href="{{article.url}}"
+            class="mb-3 rounded-t-lg bg-slate-50 w-full sm:w-[17rem] sm:mb-0 xl:mb-3 xl:w-full object-cover"
+          >
+            {% if article.image %}
+              <img
+                src="{{ article.image | image_url }}"
+                alt="{{ article.image.alt }}"
+                width="{{ article.image.width }}"
+                height="{{ article.image.height }}"
+                class="block w-full h-full object-cover aspect-[16/9] rounded-t-lg"
+                loading="lazy"
+              >
+            {% else %}
+              {{ 'image' | placeholder_svg_tag: 'block w-full h-full object-cover aspect-[16/9] rounded-lg' }}
+            {% endif %}
+          </a>
+          <div class="p-4 sm:ml-6 xl:ml-0 h-full flex flex-col items-start justify-between">
+            <div>
+              <h2 class="mb-1 text-slate-900 font-semibold">
+                <span class="mb-1 block text-sm leading-6 text-green-600">
+                  {{- article.created_at | date: '%B %d, %Y' -}}
+                </span>
+                <a href="{{ article.url }}" class="hover:text-green-800 ">{{ article.title | capitalize }}</a>
+              </h2>
+
+              <div class="prose prose-slate prose-sm text-slate-600">
+                {% if article.excerpt.size > 0 %}
+                  {{
+                    article.excerpt
+                    | strip_html
+                    | capitalize
+                    | truncatewords: section.settings.number_of_words, '...'
+                  }}
+                {% else %}
+                  {{
+                    article.content
+                    | strip_html
+                    | capitalize
+                    | truncatewords: section.settings.number_of_words, '...'
+                  }}
+                {% endif %}
+              </div>
+            </div>
+
+            <a
+              href="{{ article.url }}"
+              class="group block inline-flex items-center h-9 rounded-full text-sm font-semibold whitespace-nowrap px-3 focus:outline-none focus:ring-2 bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900 focus:ring-slate-500 mt-6"
+            >
+              Read more
+              <span class="sr-only">, {{ article.title }}</span>
+              {% render 'icon-chevron-right' %}
+            </a>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+
+    {% if paginate.pages > 1 %}
+      <div class="flex justify-center mt-12">
+        {{ paginate | default_pagination: class: 'flex space-x-2' }}
+      </div>
+    {% endif %}
+  </div>
+{% endpaginate %}
+
+{% schema %}
+{
+  "name": "Blog Template",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "range",
+      "default": 3,
+      "step": 1,
+      "min": 1,
+      "max": 9,
+      "id": "number_of_articles",
+      "label": "Articles Per Page"
+    },
+    {
+      "type": "number",
+      "default": 7,
+      "id": "number_of_words",
+      "label": "Number of Preview Words"
+    }
+  ]
+}
+{% endschema %}
