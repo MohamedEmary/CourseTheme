@@ -17,7 +17,7 @@
             <div class="aspect-square overflow-hidden">
               <img
                 src="{{ image_preview | img_url: '600x600', crop: 'center' }}"
-                alt="{{ collection.title }}"
+                alt="{{ collection.title | escape }}"
                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 loading="lazy"
               >

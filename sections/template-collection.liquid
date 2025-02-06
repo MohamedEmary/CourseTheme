@@ -1,6 +1,8 @@
-<a class="block" href="{{ routes.collections_url }}">Go back to collections</a>
+<div class="text-center mb-3">
+  <a class=" text-gray-400 hover:underline" href="{{ routes.collections_url }}">Go back to collections</a>
+</div>
 {% paginate collection.products by section.settings.product_per_page %}
-  <div class="text-center">{{ collection.title }}</div>
+  <div class="text-center text-4xl mb-5">{{ collection.title }}</div>
 
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
