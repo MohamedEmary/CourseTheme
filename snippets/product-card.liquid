@@ -1,0 +1,31 @@
+<div class="group relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition hover:shadow-lg">
+  <a href="{{ product.url }}" class="relative flex h-[300px] overflow-hidden">
+    {% if product.featured_image %}
+      <img
+        src="{{ product.featured_image | img_url: 'medium' }}"
+        alt="{{ product.featured_image.alt }}"
+        class="w-full h-full object-cover object-center"
+        loading="lazy"
+      >
+    {% else %}
+      {{ 'image' | placeholder_svg_tag: 'w-full h-full object-cover rounded-t-lg' }}
+    {% endif -%}
+  </a>
+  <div class="flex flex-col space-y-2 p-4">
+    {% if section.settings.show_vendor %}
+      <h3 class="text-sm font-medium text-gray-500">
+        {{ product.vendor }}
+      </h3>
+    {% endif %}
+    {% if section.settings.show_title %}
+      <h3 class="text-lg font-medium text-gray-600 group-hover:text-green-600">
+        {{ product.title }}
+      </h3>
+    {% endif %}
+    {% if section.settings.show_price %}
+      <p class="text-lg font-semibold text-gray-600">
+        {{ product.price | money }}
+      </p>
+    {% endif %}
+  </div>
+</div>

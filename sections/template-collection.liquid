@@ -1,0 +1,50 @@
+<a class="block" href="{{ routes.collections_url }}">Go back to collections</a>
+{% paginate collection.products by section.settings.product_per_page %}
+  <div class="text-center">{{ collection.title }}</div>
+
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {% for product in collection.products %}
+        {% render 'product-card', product: product %}
+      {% else %}
+        <p>There are no products inside of this collection</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% render 'pagination', pagination: paginate %}
+{% endpaginate %}
+
+{% schema %}
+{
+  "settings": [
+    {
+      "type": "range",
+      "id": "product_per_page",
+      "default": 6,
+      "min": 3,
+      "max": 9,
+      "step": 3,
+      "label": "Number of products per page"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "default": true,
+      "label": "Show vendor"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "default": true,
+      "label": "Show Price"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "default": true,
+      "label": "Show Title"
+    }
+  ]
+}
+{% endschema %}
