@@ -1,0 +1,47 @@
+<div class="container mx-auto px-4 py-10">
+  <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-10">
+    {{ section.settings.collection_header }}
+  </h1>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    {% for collection in collections %}
+      {% if collection.all_products_count > 0 %}
+        <div class="group bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 ">
+          <a href="{{ collection.url }}" class="block">
+            {% if collection.featured_image != blank %}
+              {% assign image_preview = collection.featured_image %}
+            {% else %}
+              {% assign image_preview = collection.products.first.images.first %}
+            {% endif %}
+
+            <div class="aspect-square overflow-hidden">
+              <img
+                src="{{ image_preview | img_url: '600x600', crop: 'center' }}"
+                alt="{{ collection.title }}"
+                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                loading="lazy"
+              >
+            </div>
+            <h2 class="p-4 text-lg font-semibold text-gray-800 text-center">
+              {{ collection.title }}
+            </h2>
+          </a>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collection List",
+  "settings": [
+    {
+      "type": "text",
+      "id": "collection_header",
+      "default": "Collections",
+      "label": "Heading"
+    }
+  ]
+}
+{% endschema %}
