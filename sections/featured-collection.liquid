@@ -18,7 +18,12 @@
         {% comment %}
           Shopify indexes start from one so if the value in limit is 4, it will show 4 products.
         {% endcomment %}
+
         {% render 'product-card', product: product %}
+      {% else %}
+        {% for item in (1..2) %}
+          {% render 'product-card-placeholder' %}
+        {% endfor %}
       {% endfor %}
     </div>
   </div>
@@ -67,6 +72,7 @@
       "default": true
     }
   ],
+  // presets allows to add the featured collection section to certain pages
   "presets": [
     {
       "name": "Featured Collection"
