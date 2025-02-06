@@ -1,0 +1,76 @@
+<div class="flex flex-col items-center my-8">
+  <h1 class="text-center text-3xl">{{ section.settings.title }}</h1>
+
+  <div class="max-w-6xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {% comment %}
+        TODO: Ask how does the value in the loop below section.settings.featured_collection.products
+        see the value in `index.json` and if we change it in index.json the products begin shown change too
+        There is no param sent between the two pages.
+
+        "settings": {
+            "featured_collection": "frontpage"
+        }
+      {% endcomment %}
+      {% for product in section.settings.featured_collection.products
+        limit: section.settings.number_of_products_to_show
+      %}
+        {% comment %}
+          Shopify indexes start from one so if the value in limit is 4, it will show 4 products.
+        {% endcomment %}
+        {% render 'product-card', product: product %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured Collection",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Featured Collection",
+      "label": "Title"
+    },
+    {
+      "type": "collection",
+      "id": "featured_collection",
+      "label": "Collection"
+      // "default": "all"
+    },
+    {
+      "type": "range",
+      "id": "number_of_products_to_show",
+      "min": 4,
+      "max": 12,
+      "default": 4,
+      "label": "Number of products to show"
+    },
+    {
+      "type": "checkbox",
+      "label": "Show vendor",
+      "id": "show_vendor",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "label": "Show title",
+      "id": "show_title",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "label": "Show price",
+      "id": "show_price",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection"
+    }
+  ]
+}
+{% endschema %}
