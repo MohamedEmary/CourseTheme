@@ -1,0 +1,127 @@
+{% comment %}
+  Why when i added this section it appeared without having a json file?
+{% endcomment %}
+
+<div class="container mx-auto px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    {% form 'contact', class: 'space-y-2' %}
+      {% if form.errors %}
+        <div class="bg-red-50 p-4 rounded-md">
+          {{ form.errors | default_errors }}
+        </div>
+      {% endif %}
+
+      <div class="mt-12 bg-white rounded-lg">
+        {% if section.settings.enable_title %}
+          <h2 class="text-2xl font-semibold text-gray-800 mb-6">{{ section.settings.title }}</h2>
+        {% endif %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {% if section.settings['first-name'] %}
+            <div class="first-name">
+              <label for="first-name" class="block text-sm font-medium text-gray-700 mb-1">First name</label>
+              <input
+                type="text"
+                name="contact[first_name]"
+                id="first-name"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              >
+            </div>
+          {% endif %}
+
+          {% if section.settings['last-name'] %}
+            <div class="last-name">
+              <label for="last-name" class="block text-sm font-medium text-gray-700 mb-1">Last name</label>
+              <input
+                type="text"
+                name="contact[last_name]"
+                id="last-name"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              >
+            </div>
+          {% endif %}
+        </div>
+
+        {% if section.settings.email %}
+          <div class="email">
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input
+              type="email"
+              name="contact[email]"
+              id="email"
+              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            >
+          </div>
+        {% endif %}
+
+        {% if section.settings.message %}
+          <div class="message">
+            <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+            <textarea
+              name="contact[body]"
+              id="message"
+              rows="4"
+              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            ></textarea>
+          </div>
+        {% endif %}
+
+        <div class="submit">
+          <button
+            type="submit"
+            class="w-full md:w-auto mt-4 px-6 py-3 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
+          >
+            Send Message
+          </button>
+        </div>
+      </div>
+    {% endform %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "settings": [
+    {
+      "type": "text",
+      "default": "Contact Us",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "checkbox",
+      "default": true,
+      "id": "enable_title",
+      "label": "Enable Enable Title"
+    },
+    {
+      "type": "checkbox",
+      "default": true,
+      "id": "first-name",
+      "label": "Enable First Name"
+    },
+    {
+      "type": "checkbox",
+      "default": true,
+      "id": "last-name",
+      "label": "Enable Last Name"
+    },
+    {
+      "type": "checkbox",
+      "default": true,
+      "id": "email",
+      "label": "Enable Email"
+    },
+    {
+      "type": "checkbox",
+      "default": true,
+      "id": "message",
+      "label": "Enable Message"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact form"
+    }
+  ]
+}
+{% endschema %}
