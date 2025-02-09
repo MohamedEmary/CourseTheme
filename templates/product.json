@@ -1,0 +1,27 @@
+{
+  "name": "Product Template",
+  "sections": {
+    "template": {
+      "type": "template-product",
+      "blocks": {
+        "vendor": { "type": "vendor" },
+        "description": { "type": "description" },
+        "quantity": { "type": "quantity" },
+        "price": { "type": "price" },
+        "title": { "type": "title" },
+        "checkout": { "type": "checkout" },
+        "variant": { "type": "variant" }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "description",
+        "price",
+        "variant",
+        "quantity",
+        "checkout"
+      ]
+    }
+  },
+  "order": ["template"]
+}

@@ -1,0 +1,283 @@
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+<style>
+  html,
+  body {
+    position: relative;
+    height: 100%;
+  }
+
+  body {
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: #000;
+    margin: 0;
+    padding: 0;
+  }
+
+  .swiper {
+    width: 100%;
+    height: auto;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .swiper-slide {
+    aspect-ratio: 1 / 1;
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>
+
+<div class="container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 py-8">
+    <!-- Swiper section -->
+    <div class="w-full">
+      {% if section.settings.enable_slider %}
+        <div class="swiper mySwiper">
+          <div class="swiper-wrapper">
+            {% for media in product.media %}
+              <div class="swiper-slide">
+                {% render 'product-media', media: media %}
+              </div>
+            {% endfor %}
+          </div>
+          <div class="swiper-pagination bg-gray-500 bg-opacity-25"></div>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Product details section -->
+    <div class="w-full">
+      {% form 'product', product, id: 'product-form', novalidate: 'novalidate' %}
+        <input type="hidden" name="id" value="{{ selected_variant.id }}">
+
+        <div class="space-y-6">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'vendor' %}
+                <div class="my-3 md:my-4">
+                  <span class="text-xs md:text-sm text-gray-500">{{ product.vendor }}</span>
+                </div>
+
+              {% when 'title' %}
+                <div class="my-3 md:my-4">
+                  <h1 class="text-2xl md:text-3xl lg:text-4xl text-gray-900">{{ product.title }}</h1>
+                </div>
+
+              {% when 'price' %}
+                <div class="my-3 md:my-4" id="price-{{ section.id }}">
+                  <span class="text-base md:text-lg text-gray-500 line-through">
+                    {{- selected_variant.compare_at_price | money -}}
+                  </span>
+                  <span class="text-lg md:text-xl lg:text-2xl text-gray-900">{{ selected_variant.price | money }}</span>
+                  {% if selected_variant.price < selected_variant.compare_at_price %}
+                    <span class="px-3 md:px-5 py-1 text-sm md:text-base font-bold bg-red-500 rounded-full text-white mx-2 md:mx-4"
+                      >Sale</span
+                    >
+                  {% endif %}
+                </div>
+
+              {% when 'variant' %}
+                <div class="my-3 md:my-4">
+                  {% unless product.has_only_default_variant %}
+                    <variant-selector data-url="{{ product.url }}" data-section="{{ section.id }}">
+                      {% for option in product.options_with_values %}
+                        <label
+                          class="text-sm md:text-base font-medium"
+                          for="Option-{{ section.id }}-{{ forloop.index0 }}"
+                        >
+                          {{ option.name }}
+                        </label>
+                        <div class="my-2">
+                          <select
+                            name="options[{{ option.name | escape }}]"
+                            id="Option-{{ section.id }}-{{ forloop.index0 }}"
+                            class="w-full border py-2 md:py-3 px-3 rounded-md"
+                          >
+                            {% for value in option.values %}
+                              <option
+                                value="{{ value | escape }}"
+                                {% if option.selected_value == value %}
+                                  selected="selected"
+                                {% endif %}
+                              >
+                                {{ value }}
+                              </option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      {% endfor %}
+                      <script type="application/json">
+                        {{ product.variants | json }}
+                      </script>
+                    </variant-selector>
+                  {% endunless %}
+                </div>
+
+              {% when 'quantity' %}
+                <div class="my-3 md:my-4">
+                  <label class="text-sm md:text-base font-medium" for="Quantity-{{ section.id }}">Quantity</label>
+                  <div class="my-2">
+                    <input
+                      type="number"
+                      name="quantity"
+                      id="Quantity-{{ section.id }}"
+                      value="1"
+                      min="1"
+                      class="w-full md:max-w-[200px] border px-3 py-2 md:py-3 rounded-md"
+                    >
+                  </div>
+                </div>
+
+              {% when 'description' %}
+                <div class="my-3 md:my-4">
+                  <p class="text-sm md:text-base text-gray-700">{{ product.description }}</p>
+                </div>
+
+              {% when 'checkout' %}
+                <div class="my-3 md:my-4">
+                  <button
+                    type="submit"
+                    name="add"
+                    class="w-full md:max-w-[300px] px-6 py-3 md:py-4 bg-green-600 text-white hover:bg-green-700 rounded-md transition-colors duration-200"
+                    {% if selected_variant.available == false %}
+                      disabled
+                    {% endif %}
+                  >
+                    {% if selected_variant.available == false %}
+                      Sold out
+                    {% else %}
+                      Add to cart
+                    {% endif %}
+                  </button>
+                </div>
+              {% else %}
+
+            {% endcase %}
+          {% endfor %}
+        </div>
+      {% endform %}
+    </div>
+  </div>
+</div>
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<!-- Initialize Swiper -->
+<script>
+  var swiper = new Swiper('.mySwiper', {
+    spaceBetween: 30,
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+  });
+</script>
+
+<script src="{{ 'variant-selector.js' | asset_url  }}"></script>
+
+{% schema %}
+{
+  "settings": [
+    {
+      "type": "checkbox",
+      "default": true,
+      "label": "Enable Image Slider",
+      "id": "enable_slider"
+    },
+    {
+      "type": "checkbox",
+      "default": true,
+      "label": "Enable Vendor",
+      "id": "enable_vendor"
+    },
+    {
+      "type": "checkbox",
+      "default": true,
+      "label": "Enable Description",
+      "id": "enable_description"
+    },
+    {
+      "type": "checkbox",
+      "default": true,
+      "label": "Enable Quantity",
+      "id": "enable_quantity"
+    },
+    {
+      "type": "checkbox",
+      "default": true,
+      "label": "Enable Price",
+      "id": "enable_price"
+    },
+    {
+      "type": "checkbox",
+      "default": true,
+      "label": "Enable Title",
+      "id": "enable_title"
+    },
+    {
+      "type": "checkbox",
+      "default": true,
+      "label": "Enable Checkout",
+      "id": "enable_checkout"
+    },
+    {
+      "type": "checkbox",
+      "default": true,
+      "label": "Enable Variant",
+      "id": "enable_variant"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "vendor",
+      "name": "Vendor",
+      "limit": 1
+    },
+    {
+      "type": "description",
+      "name": "Description",
+      "limit": 1
+    },
+    {
+      "type": "quantity",
+      "name": "Quantity",
+      "limit": 1
+    },
+    {
+      "type": "price",
+      "name": "Price",
+      "limit": 1
+    },
+    {
+      "type": "title",
+      "name": "Title",
+      "limit": 1
+    },
+    {
+      "type": "checkout",
+      "name": "Checkout",
+      "limit": 1
+    },
+    {
+      "type": "variant",
+      "name": "Variant",
+      "limit": 1
+    }
+  ]
+}
+{% endschema %}
