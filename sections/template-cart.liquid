@@ -40,6 +40,8 @@
                         {{ 'product-1' | placeholder_svg_tag: 'w-16 h-16' }}
                       {% endif %}
 
+                      {{ item.title }}
+                      <br>
                       {{ item.product.title | truncatewords: 5 }}
                     </div>
                   </td>
