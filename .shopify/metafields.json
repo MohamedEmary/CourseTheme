@@ -9,7 +9,89 @@
   "market": [],
   "order": [],
   "page": [],
-  "product": [],
+  "product": [
+    {
+      "key": "snowboard_length",
+      "namespace": "test_data",
+      "name": "Snowboard length",
+      "description": "The length of the snowboard",
+      "type": {
+        "name": "dimension",
+        "category": "MEASUREMENT"
+      }
+    },
+    {
+      "key": "binding_mount",
+      "namespace": "test_data",
+      "name": "Snowboard binding mount",
+      "description": "The type of binding mount used on the snowboard",
+      "type": {
+        "name": "single_line_text_field",
+        "category": "TEXT"
+      }
+    },
+    {
+      "key": "target-gender",
+      "namespace": "shopify",
+      "name": "Target gender",
+      "description": "Identifies the intended gender for a product, such as female, male or unisex",
+      "type": {
+        "name": "list.metaobject_reference",
+        "category": "REFERENCE"
+      }
+    },
+    {
+      "key": "watch-display",
+      "namespace": "shopify",
+      "name": "Watch display",
+      "description": "Distinguishes between watch displays, such as digital or analog",
+      "type": {
+        "name": "list.metaobject_reference",
+        "category": "REFERENCE"
+      }
+    },
+    {
+      "key": "watch-features",
+      "namespace": "shopify",
+      "name": "Watch features",
+      "description": "Identifies special characteristics of a watch, such as automatic movement or luminous hands",
+      "type": {
+        "name": "list.metaobject_reference",
+        "category": "REFERENCE"
+      }
+    },
+    {
+      "key": "band-color",
+      "namespace": "shopify",
+      "name": "Band color",
+      "description": "Specifies the color of a watch band, e.g. multicolor, rose gold",
+      "type": {
+        "name": "list.metaobject_reference",
+        "category": "REFERENCE"
+      }
+    },
+    {
+      "key": "age-group",
+      "namespace": "shopify",
+      "name": "Age group",
+      "description": "Defines the target age range for a product, such as adults or kids",
+      "type": {
+        "name": "list.metaobject_reference",
+        "category": "REFERENCE"
+      }
+    }
+  ],
   "variant": [],
-  "shop": []
+  "shop": [
+    {
+      "key": "alpine_sports",
+      "namespace": "test_data",
+      "name": "Alpine sport types",
+      "description": "The set of alpine sports that this sport shop specializes in",
+      "type": {
+        "name": "list.single_line_text_field",
+        "category": "TEXT"
+      }
+    }
+  ]
 }
