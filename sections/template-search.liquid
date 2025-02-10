@@ -1,0 +1,64 @@
+<div class="container mx-auto">
+  {% assign result_size = search.results_count %}
+  {% paginate search.results by section.settings.items_per_page %}
+    <h1 class="text-3xl font-bold mt-6 mb-10 text-center">Search Results</h1>
+
+    {% if search.performed %}
+      {% if result_size > 0 %}
+        <div class="max-w-6xl mx-auto">
+          <p class="text-gray-500 text-center my-10 text-xl">
+            <b>{{ result_size }}</b> results for the search term <b>{{ search.terms | escape }}</b>
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {% for item in search.results %}
+              {% if item.object_type == 'product' %}
+                {% render 'product-card', product: item %}
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+
+      {% else %}
+        <div class="text-center my-10 text-xl">
+          <p>No results found for the search term: {{ search.terms | escape }}. Try to use a different keyword</p>
+        </div>
+      {% endif %}
+    {% endif %}
+
+    {% render 'pagination', pagination: paginate %}
+  {% endpaginate %}
+</div>
+
+{% schema %}
+{
+  "settings": [
+    {
+      "type": "range",
+      "id": "items_per_page",
+      "label": "Items per page",
+      "default": 9,
+      "min": 1,
+      "max": 15,
+      "step": 1
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "default": true,
+      "label": "Show Price"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "default": true,
+      "label": "Show Vendor"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "default": true,
+      "label": "Show Title"
+    }
+  ]
+}
+{% endschema %}
