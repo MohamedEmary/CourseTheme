@@ -66,9 +66,8 @@ class VariantSelector extends HTMLElement {
   // this function updates a hidden input field which
   // holds the id of the product variant
   updateFormInputID() {
-    const hidden_input = document
-      .getElementById("product-form")
-      .querySelector('input[name="id"]');
+    const parentForm = this.parentElement.parentElement.parentElement;
+    const hidden_input = parentForm.querySelector('input[name="id"]');
     hidden_input.value = this.currentVariant.id;
   }
 
