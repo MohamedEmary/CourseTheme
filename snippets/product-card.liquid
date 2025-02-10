@@ -1,4 +1,7 @@
-<div class="group relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition hover:shadow-lg">
+<div
+  x-data="{ showModal: false }"
+  class="group relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition hover:shadow-lg"
+>
   <a href="{{ product.url }}" class="relative flex h-[300px] overflow-hidden">
     {% if product.featured_image %}
       <img
@@ -27,5 +30,144 @@
         {{ product.price | money }}
       </p>
     {% endif %}
+    {% comment %} TODO: add settings option to enable and disable it {% endcomment %}
+    <button
+      @click="showModal = true"
+      onclick="document.querySelector('#product-form variant-selector').dispatchEvent(new Event('change'))"
+      class="bg-green-500 hover:bg-green-700 py-2 text-lg text-white font-bold rounded-lg"
+    >
+      Add To Cart
+    </button>
+  </div>
+
+  <div
+    x-show="showModal"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4"
+    style="display: none;"
+  >
+    <div class="fixed inset-0 bg-black bg-opacity-50"></div>
+    <div
+      class="relative bg-white rounded-lg p-4 max-w-md w-full"
+      @click.away="showModal = false"
+    >
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold">Please Select The Variant:</h3>
+        <button @click="showModal = false" class="text-gray-500 hover:text-gray-700">
+          {% render 'icon-close', class: 'w-8' %}
+        </button>
+      </div>
+
+      {% comment %} {%- assign form_id = 'product-form-' | append: product.id -%} {% endcomment %}
+      {% form 'product', product, id: 'product-form', novalidate: 'novalidate' %}
+        {% comment %} -{{ product.id }} {% endcomment %}
+        {% comment %}
+          <form
+            method="post"
+            action="/cart/add"
+            id="product-form"
+            class="shopify-product-form"
+            enctype="multipart/form-data"
+            novalidate="novalidate"
+          >
+        {% endcomment %}
+        {% comment %} <form method="get" action="/cart/add" id="{{ form_id }}" accept-charset="UTF-8" novalidate="novalidate"> {% endcomment %}
+        <input type="hidden" name="id" value="{{ selected_variant.id }}">
+
+        <div class="space-y-6">
+          <div class="my-3 md:my-4">
+            <span class="text-xs md:text-sm text-gray-500">{{ product.vendor }}</span>
+          </div>
+
+          <div class="my-3 md:my-4">
+            <h1 class="text-2xl md:text-3xl lg:text-4xl text-gray-900">{{ product.title }}</h1>
+          </div>
+
+          <div class="my-3 md:my-4" id="price-{{ section.id }}">
+            <span class="text-base md:text-lg text-gray-500 line-through">
+              {{- selected_variant.compare_at_price | money -}}
+            </span>
+            <span class="text-lg md:text-xl lg:text-2xl text-gray-900">{{ selected_variant.price | money }}</span>
+            {% if selected_variant.price < selected_variant.compare_at_price %}
+              <span class="px-3 md:px-5 py-1 text-sm md:text-base font-bold bg-red-500 rounded-full text-white mx-2 md:mx-4"
+                >Sale</span
+              >
+            {% endif %}
+          </div>
+
+          <div class="my-3 md:my-4">
+            {% unless product.has_only_default_variant %}
+              <variant-selector data-url="{{ product.url }}" data-section="{{ section.id }}">
+                {% for option in product.options_with_values %}
+                  <label
+                    class="text-sm md:text-base font-medium"
+                    for="Option-{{ section.id }}-{{ forloop.index0 }}"
+                  >
+                    {{ option.name }}
+                  </label>
+                  <div class="my-2">
+                    <select
+                      name="options[{{ option.name | escape }}]"
+                      id="Option-{{ section.id }}-{{ forloop.index0 }}"
+                      class="w-full border py-2 md:py-3 px-3 rounded-md"
+                    >
+                      {% for value in option.values %}
+                        <option
+                          value="{{ value | escape }}"
+                          {% if option.selected_value == value %}
+                            selected="selected"
+                          {% endif %}
+                        >
+                          {{ value }}
+                        </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                {% endfor %}
+                <script type="application/json">
+                  {{ product.variants | json }}
+                </script>
+              </variant-selector>
+            {% endunless %}
+          </div>
+
+          <div class="my-3 md:my-4">
+            <label class="text-sm md:text-base font-medium" for="Quantity-{{ section.id }}">Quantity</label>
+            <div class="my-2">
+              <input
+                type="number"
+                name="quantity"
+                id="Quantity-{{ section.id }}"
+                value="1"
+                min="1"
+                class="w-full md:max-w-[200px] border px-3 py-2 md:py-3 rounded-md"
+              >
+            </div>
+          </div>
+
+          <div class="my-3 md:my-4">
+            <p class="text-sm md:text-base text-gray-700">{{ product.description }}</p>
+          </div>
+
+          <div class="my-3 md:my-4">
+            <button
+              type="submit"
+              name="add"
+              class="w-full px-6 py-3 md:py-4 bg-green-600 text-white hover:bg-green-700 rounded-md transition-colors duration-200"
+              {% if selected_variant.available == false %}
+                disabled
+              {% endif %}
+            >
+              {% if selected_variant.available == false %}
+                Sold out
+              {% else %}
+                Add to cart
+              {% endif %}
+            </button>
+          </div>
+        </div>
+        {% comment %} </form> {% endcomment %}
+      {% endform %}
+      {% comment %} </form> {% endcomment %}
+    </div>
   </div>
 </div>

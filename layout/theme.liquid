@@ -7,10 +7,11 @@
     <meta name="description" content="{{ page_description | escape }}">
     <link rel="canonical" href="{{ canonical_url }}">
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-  {{ content_for_header }}
+    {{ content_for_header }}
     <!-- Header hook for plugins -->
     {{ 'application.css' | asset_url | stylesheet_tag }}
     {{ 'application.js' | asset_url | script_tag }}
+    <script src="{{ 'variant-selector.js' | asset_url }}" defer></script>
     {% comment %} {{ 'https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js' | script_tag: defer: true }} {% endcomment %}
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
   </head>

@@ -72,6 +72,13 @@ class VariantSelector extends HTMLElement {
     hidden_input.value = this.currentVariant.id;
   }
 
+  // updateFormInputID() {
+  //   const hidden_input = document
+  //     .getElementById("product-form")
+  //     .querySelector('input[name="id"]');
+  //   hidden_input.value = this.currentVariant.id;
+  // }
+
   updatePrice() {
     // Make an API call to get the price of that variant
     fetch(
