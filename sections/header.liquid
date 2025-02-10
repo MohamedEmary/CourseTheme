@@ -31,7 +31,7 @@
                 <button
                   x-on:click="open = ! open"
                   type="button"
-                  class="inline-flex items-center text-base text-gray-500 hover:text-gray-900"
+                  class="inline-flex items-center text-base text-gray-700 hover:text-gray-950"
                 >
                   {{ link.title }}
                   <span class="w-4 h-4 ml-2">{% render 'icon-chevron-down' %}</span>
@@ -49,7 +49,7 @@
                       {% for childlink in link.links %}
                         <a href="{{ childlink.url }}" class="-m-3 p-3 flex items start rounded-lg hover:bg-gray-100">
                           <div class="ml-4">
-                            <p class="text-gray-900 text-base font-medium">
+                            <p class="text-gray-950 text-base font-medium">
                               {{ childlink.title }}
                             </p>
                           </div>
@@ -62,7 +62,7 @@
             {% else %}
               <a
                 href="{{ link.url }}"
-                class="text-base text-gray-500 hover:text-gray-900 {% if link.active==true %}text-green-500{% endif %} "
+                class="text-base text-gray-700 hover:text-gray-950 {% if link.active==true %}text-green-500{% endif %} "
               >
                 {{ link.title }}
               </a>
@@ -72,35 +72,52 @@
       </nav>
 
       <div class="hidden md:flex items-center justify-end md:flex-1 space-x-5">
+        <form action="{{ routes.search_url }}" method="get" class="relative" id="searchForm">
+          <input
+            type="search"
+            placeholder="Search......"
+            name="q"
+            id="searchInput"
+            class="w-0 px-4 rounded-full outline-none bg-gray-200 text-lg transition-all duration-300 ease-in-out float-right overflow-hidden"
+            required
+          >
+          <button
+            type="submit"
+            class="absolute right-0 top-0 rounded-full border-1 text-gray-700 w-8 h-8 text-center cursor-pointer flex items-center justify-center"
+            id="searchButton"
+          >
+            <span id="search-icon">{% render 'icon-search' %}</span>
+          </button>
+        </form>
+
         {% comment %}  See how to fix the icon problem. It only appears if there is text next to it. The problem was because there is no min width or height for the icon. {% endcomment %}
 
-        <a href="{{ routes.cart_url }}" class="text-base text-gray-500 hover:text-gray-900 min-w-6">
+        <a href="{{ routes.cart_url }}" class="text-base text-gray-700 hover:text-gray-950 min-w-6">
           {% render 'icon-shopping-bag' %}
         </a>
 
         {% if shop.customer_accounts_enabled %}
-          <a href="{{ routes.account_login_url }}" class="text-base text-gray-500 hover:text-gray-900">Login</a>
-          <a href="{{ routes.account_register_url }}" class="text-base text-gray-500 hover:text-gray-900">Register</a>
+          <a href="{{ routes.account_login_url }}" class="text-base text-gray-700 hover:text-gray-950">Login</a>
+          <a href="{{ routes.account_register_url }}" class="text-base text-gray-700 hover:text-gray-950">Register</a>
         {% endif %}
       </div>
     </div>
   </div>
 
   <!-- MOBILE MENU CONTAINER -->
-
   <div x-show="mobileMenuOpen" class="absolute z-10 top-0 inset-x-0 p-2 transform origin-top-left md:hidden">
     <div class="shadow-lg rounded-lg ring-1 ring-black ring-opacity-5 bg-white w-full">
       <div class="p-5 divide-y-2 divide-gray-50">
         <!-- MOBILE MENU HEADER TITLE PLUS CLOSE BUTTON -->
         <div class="flex items-center justify-between pb-3">
           <div>
-            <h1 class="text-lg text-gray-500">{{ section.settings.mobile_menu_title }}</h1>
+            <h1 class="text-lg text-gray-700">{{ section.settings.mobile_menu_title }}</h1>
           </div>
           <div class="-mr-2">
             <button
               x-on:click="mobileMenuOpen = false"
               type="button"
-              class="bg-white rounded-md p-2 text-gray-500 w-12 h-12"
+              class="bg-white rounded-md p-2 text-gray-700 w-12 h-12"
             >
               {% render 'icon-close' %}
             </button>
@@ -117,7 +134,7 @@
                   <button
                     type="button"
                     x-on:click="{{ link_handle }} = !{{ link_handle }}"
-                    class="text-base text-gray-500 hover:text-gray-900 flex items-center justify-between w-full"
+                    class="text-base text-gray-700 hover:text-gray-950 flex items-center justify-between w-full"
                   >
                     <div>
                       {{ link.title }}
@@ -129,9 +146,9 @@
                     {% for childlink in link.links %}
                       <a
                         href="{{ childlink.url }}"
-                        class="-m-3 p-3 mt-2 flex items-center rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                        class="-m-3 p-3 mt-2 flex items-center rounded-md text-gray-700 hover:text-gray-950 hover:bg-gray-50"
                       >
-                        <span class="ml-3 text-base font-medium text-gray-500">
+                        <span class="ml-3 text-base font-medium text-gray-700">
                           {{ childlink.title }}
                         </span>
                       </a>
@@ -141,7 +158,7 @@
               {% else %}
                 <a
                   href="{{ link.url }}"
-                  class="-m-3 p-3 flex items-center rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                  class="-m-3 p-3 flex items-center rounded-md text-gray-700 hover:text-gray-950 hover:bg-gray-50"
                 >
                   {{ link.title }}
                 </a>
@@ -153,6 +170,8 @@
     </div>
   </div>
 </div>
+
+<script src="{{ 'search.js' | asset_url }}" defer></script>
 
 {% schema %}
 {
